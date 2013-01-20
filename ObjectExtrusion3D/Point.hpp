@@ -37,9 +37,6 @@ class Point : public ISerializable {
 public:
 	static const double EPSILON;
 
-	//
-	// Membrii.
-	//
 	double X;
 	double Y;
 	double Z;
@@ -98,15 +95,11 @@ public:
 	}
 
 	virtual void Deserialize(Stream &stream) {
-		// Citeste valorile din stream.
 		stream.Read(X);
 		stream.Read(Y);
 		stream.Read(Z);
 	}
 	
-	//
-	// Operatori supraincarcati.
-	//
 	bool operator ==(const Point &other) const {
 		if(&other == this) return true;
 		
@@ -164,7 +157,6 @@ public:
 	}
 };
 
-// Definitii pentru constante.
 const double Point::EPSILON = 0.00001;
 
 #endif

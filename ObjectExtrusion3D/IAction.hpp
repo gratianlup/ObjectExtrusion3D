@@ -37,7 +37,7 @@ enum ActionType {
 	ACTION_SCALE
 };
 
-// Interfata ce trebuie implementata de toate actiunile.
+// Interface that must be implemented by all transform actions.
 class IAction : public ISerializable {
 protected:
 	bool withPrevious_;

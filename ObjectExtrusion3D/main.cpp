@@ -146,7 +146,7 @@ double rotationZ_ = 0;
 void Initialize() {
 	glShadeModel(GL_SMOOTH);
 	
-	// Activeaza iluminarea.
+	// Activate lighting.
 	GLfloat ambient[] = {1.0, 1.0, 1.0, 1.0};
 	GLfloat diffuse[] = {1.0, 1.0, 1.0, 1.0};
 	GLfloat lightPos[] = { 0.0, 100.0, 100.0, 1.0 };
@@ -166,12 +166,12 @@ void Initialize() {
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 
-	// Activeaza antialiasing.
+	// Activate antialiasing.
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_LINE_SMOOTH);
 
-	// Creeaza o figura goala si o actiune demonstrativa.
+	// Create an empty shape and a sample action.
 	scene_.SetShape(new Shape());
 	IAction *action = new RotateAction(2 * M_PI, ROTATION_ZERO, AXIS_X);
 	action->SetSteps(100);
@@ -190,7 +190,7 @@ void Reshape(int w, int h) {
 }
 
 void DisplayBasicShape(Shape *shape) {
-	// Deseneaza liniile ce formeaza figura.
+	// Draw the lines which form the shape.
 	List<Point> &list = shape->Points();
 
 	if(list.Count() >= 2) {
@@ -204,7 +204,7 @@ void DisplayBasicShape(Shape *shape) {
 		glEnd();
 	}
 
-	// Deseneaza punctele de control.
+	// Draw the control points over the lines.
 	glPointSize(8);
 
 	glBegin(GL_POINTS);
@@ -216,7 +216,7 @@ void DisplayBasicShape(Shape *shape) {
 }
 
 void DisplayBezierShape(BezierShape *shape) {
-	// Deseneaza liniile ce formeaza figura.
+	// Draw the bezier lines which form the shape.
 	List<Point> &list = shape->Points();
 
 	if(list.Count() >= 2) {
@@ -230,7 +230,7 @@ void DisplayBezierShape(BezierShape *shape) {
 		glEnd();
 	}
 
-	// Afiseaza punctele de control si ancorele.
+	// Draw the control points over the lines.
 	glPointSize(8);
 	List<Point> &anchors = shape->AnchorPoints();
 
@@ -251,7 +251,7 @@ void DisplayBezierShape(BezierShape *shape) {
 		}
 	glEnd();
 
-	// Afiseaza o linie intre punctul de control si ancora.
+	// Draw a line between the control point and the anchor.
 	glBegin(GL_LINES);
 		for(size_t i = 0; i < control.Count(); i++) {
 			int t = i > 0 && i % 2 ? 1 : 0;
@@ -300,7 +300,6 @@ void DisplayPlay() {
 	glRotatef(rotationY_, 0, 1, 0);
 	glRotatef(rotationZ_, 0, 0, 1);
 
-	// Activeaza iluminare speciala.
 	GLfloat specular[] = { 1.0, 1.0, 1.0, 1.0};
 	GLfloat specReflection[] = { 0.9, 0.9, 0.9, 1.0};
 
@@ -308,7 +307,7 @@ void DisplayPlay() {
 	glMaterialfv(GL_FRONT, GL_SPECULAR, specReflection);
 	glMateriali(GL_FRONT,GL_SHININESS, 200);
 
-	// Formeaza suprafetele.
+	// Build the surfaces by conecting the set of points.
 	List<Point> *a;
 	size_t listCount = scene_.Storyboard().Points().Count();
 
@@ -320,7 +319,7 @@ void DisplayPlay() {
 				for(size_t j = 0; j < b->Count(); j++) {
 					glColor3f(0.3, 0.0, 1.0);				
 
-					// Normala.
+					// Compute the normal to the surface.
 					if(j < b->Count ()- 1) {
 						Normal((*b)[j], (*b)[j + 1], (*a)[j]);
 					}
@@ -331,7 +330,6 @@ void DisplayPlay() {
 					glVertex3f((*a)[j].X, (*a)[j].Y, (*a)[j].Z);
 					glColor3f(0.3, 0.0, 1.0);
 					
-					// Normala.
 					if(j < b->Count ()- 1) {
 						Normal((*b)[j], (*b)[j + 1], (*a)[j]);
 					}
@@ -373,7 +371,7 @@ void Display() {
 	glPushMatrix();
 	glClearColor(0.9, 0.9, 0.9, 1);
 
-	// Afiseza scena in modul corespunzator.
+	// Select the current mode (edit or play).
 	if(scene_.State() == SCENE_EDIT) {
 		DisplayEdit();
 	}
@@ -381,7 +379,6 @@ void Display() {
 		DisplayPlay();
 	}
 	
-	// Afiseaza axele daca este necesar.
 	if(showAxis_) {
 		DisplayAxis();
 	}
@@ -394,10 +391,9 @@ void Idle() {
 	glutSetWindow(window_);  
 	glutPostRedisplay();
   
-	// Afiseaza urmatorul cadrul daca este pornita animatia.
+	// Play the animation until the last frame is drawn.
 	if(scene_.State() == SCENE_PLAY) {
 		if(scene_.Storyboard().NextStep() == false) {
-			// Animatia s-a incheiat.
 			scene_.SetState(SCENE_END);
 		}
 	}
@@ -458,7 +454,7 @@ void AddPoint(int x, int y, Shape *shape) {
 			break;
 		}
 		case SHAPE_BEZIER: {
-			// Adauga un nou punct ancora si un punct de control asociat.
+			// Add a new bezier control point and an anchor point.
 			BezierShape *bs = (BezierShape *)shape;
 			bs->AnchorPoints().Add(Point(x, y));
 			
@@ -687,7 +683,7 @@ void Open() {
 	OPENFILENAME ofn;
 	wchar_t szFile[MAX_PATH + 1];
 
-	// Initializeaza fereastra de deschidere.
+	// Initialize the open file dialog.
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
 	ofn.hwndOwner = NULL;
@@ -704,7 +700,6 @@ void Open() {
 	if(GetOpenFileName(&ofn)) {
 		RemoveAllActions();
 		scene_.SetShape(NULL);
-
 
 		if(scene_.Open(ofn.lpstrFile)) {		
 			PopulateActionList();
@@ -723,7 +718,7 @@ void Save() {
 	OPENFILENAME ofn;
 	wchar_t szFile[MAX_PATH + 1];
 
-	// Initializeaza fereastra de salvare.
+	// Initialize the save file dialog.
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
 	ofn.hwndOwner = NULL;
@@ -747,7 +742,7 @@ void Save() {
 }
 
 void MouseHandler(int button, int state, int x, int y) {
-	// Calculeaza coordonatele relativ la originea sis. de coord.
+	// Compute the coordinates relative to the origin of the coordinate system.
 	int tx, ty, tw, th;
 	GLUI_Master.get_viewport_area(&tx, &ty, &tw, &th);
 	x -= tw / 2;
@@ -766,8 +761,8 @@ void MouseHandler(int button, int state, int x, int y) {
 	}
 
 	if(state == GLUT_DOWN) {
-		// Identifica punctul de sub cursor. Daca nu exista nici un punct
-		// adauga unul nou.
+		// Try to find the point found under the cursor.
+		// If a point is found it is selected, otherwise a new point is created.
 		selectedPoint_ = scene_.ShapeObject()->HitTest(x, y, 8);
 		if(selectedPoint_ != NULL) {
 			mouseCaptured_ = true;
@@ -778,7 +773,6 @@ void MouseHandler(int button, int state, int x, int y) {
 	}
 	else {
 		if(selectedPoint_ != NULL) {
-			// Actualizeaza pozitia punctului.
 			UpdatePoint(selectedPoint_, x, y);
 		}
 
@@ -787,12 +781,13 @@ void MouseHandler(int button, int state, int x, int y) {
 }
 
 void KeyHandler(unsigned char key, int x, int y) {
+	// Handle key presses.
 	switch(key) {
-		case 13: {
+		case 13: { // Enter.
 			Play();
 			break;
 		}
-		case 27: {
+		case 27: { // Escape.
 			ResetScene();
 			break;
 		}
@@ -820,12 +815,12 @@ void KeyHandler(unsigned char key, int x, int y) {
 }
 
 void ControlHandler(int id) {
+	// Handle actions associated with the buttons on the interface.
 	switch(id) {
 		case AXIS_ID: {
 			break;
 		}
 		case PLAY_ID: {
-			// Incepe animatia.
 			Play();
 			break;
 		}
@@ -883,7 +878,7 @@ void ControlHandler(int id) {
 }
 
 int main(int argc, char* argv[]) {
-	// Afiseaza fereastra principala.
+	// Initialize and display the main window.
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 	glutInitWindowPosition( 50, 50 );
@@ -895,12 +890,12 @@ int main(int argc, char* argv[]) {
 
 	Initialize();
 
-	// Inregistreaza callback-uri.
+	// Register mouse and keyboard callbacks.
 	GLUI_Master.set_glutKeyboardFunc(KeyHandler);
 	GLUI_Master.set_glutMouseFunc(MouseHandler);
 	GLUI_Master.set_glutIdleFunc(Idle);
 
-	// Adauga panourile si controalele.
+	// Create the user interface by adding panels and other controls.
 	GLUI *g = GLUI_Master.create_glui_subwindow(window_, GLUI_SUBWINDOW_RIGHT);
 
 	GLUI_Panel *panel = g->add_panel("");
@@ -915,7 +910,7 @@ int main(int argc, char* argv[]) {
 	g->add_button_to_panel(panel,"Rotate Z", ROTATE_Z, ControlHandler)->set_alignment(GLUI_ALIGN_LEFT);
 	g->add_checkbox_to_panel(panel, "Show Axis", &showAxis_, AXIS_ID, ControlHandler);
 
-	// Incarcare de figuri predefinite.
+	// Controls for adding shapes.
 	GLUI_Rollout *loadPanel = g->add_rollout("New Shape");
 	loadPanel->set_alignment(GLUI_ALIGN_LEFT);
 	shapeList_ = g->add_listbox_to_panel(loadPanel, "Shape Type");
@@ -935,7 +930,7 @@ int main(int argc, char* argv[]) {
 	g->add_button_to_panel(loadPanel,"Create Shape", LOAD_SHAPE_ID, ControlHandler)->set_alignment(GLUI_ALIGN_LEFT);
 	g->add_button_to_panel(loadPanel,"Reset Shape", RESET_SHAPE_ID, ControlHandler)->set_alignment(GLUI_ALIGN_LEFT);
 
-	// Panouri pentru actiuni.
+	// Controls for adding actions.
 	GLUI_Rollout *actionPanel = g->add_rollout("Actions");
 	actionPanel->set_alignment(GLUI_ALIGN_LEFT);
 	actionList_ = g->add_listbox_to_panel(actionPanel, "Action Type");
@@ -945,7 +940,7 @@ int main(int argc, char* argv[]) {
 	actionList_->add_item(ACTION_SCALE_ID, "Scale");
 	g->add_button_to_panel(actionPanel,"Remove All", REMOVE_ALL_ID, ControlHandler)->set_alignment(GLUI_ALIGN_LEFT);
 
-	// Panoul de editare al actiunii.
+	// Controls for editing the selected action.
 	GLUI_Rollout *editPanel = g->add_rollout("Edit Action");
 	selectedList_ = g->add_listbox_to_panel(editPanel, "Selected Action", NULL, ACTION_SELECTED_ID);
 	editButton = g->add_button_to_panel(editPanel,"Edit Action", EDIT_ACTION_ID, ControlHandler);
@@ -958,7 +953,7 @@ int main(int argc, char* argv[]) {
 	g->add_checkbox_to_panel(editPanel, "Play With Previous", &withPrevious_, PREVIOUS_ID, ControlHandler);
 	g->add_button_to_panel(editPanel,"Update", UPDATE_ACTION_ID, ControlHandler)->set_alignment(GLUI_ALIGN_LEFT);
 	
-	// Panoul pt. translatie.
+	// Controls for editing a translation action.
 	translatePanel = g->add_rollout("Translate Action", 0);
 	translatePanel->set_alignment(GLUI_ALIGN_LEFT);
 	translatePanel->close();
@@ -966,14 +961,14 @@ int main(int argc, char* argv[]) {
 	g->add_spinner_to_panel(translatePanel, "Y", 2, &translateY_, TRANSLATE_Y_ID)->set_alignment(GLUI_ALIGN_LEFT);
 	g->add_spinner_to_panel(translatePanel, "Z", 2, &translateZ_, TRANSLATE_Y_ID)->set_alignment(GLUI_ALIGN_LEFT);
 
-	// Panoul pt. scalare.
+	// Controls for editing a scalling action.
 	scalePanel = g->add_rollout("Scale Action", 0);
 	scalePanel->set_alignment(GLUI_ALIGN_LEFT);
 	g->add_spinner_to_panel(scalePanel, "X", 2, &scaleX_, SCALE_X_ID)->set_alignment(GLUI_ALIGN_LEFT);
 	g->add_spinner_to_panel(scalePanel, "Y", 2, &scaleY_, SCALE_Y_ID)->set_alignment(GLUI_ALIGN_LEFT);
 	g->add_spinner_to_panel(scalePanel, "Z", 2, &scaleZ_, SCALE_Z_ID)->set_alignment(GLUI_ALIGN_LEFT);
 
-	// Panoul pt. rotatie.
+	// Controls for editing a rotation action.
 	rotatePanel = g->add_rollout("Rotate Action", 0);
 	rotatePanel->set_alignment(GLUI_ALIGN_LEFT);
 	axisList_ = g->add_listbox_to_panel(rotatePanel, "Axis", NULL, ROTATION_AXIS_ID);
@@ -991,11 +986,9 @@ int main(int argc, char* argv[]) {
 
 	g->add_spinner_to_panel(rotatePanel, "Amount", 2, &rotationAmount_, ROTATION_AMOUNT_ID)
 		->set_alignment(GLUI_ALIGN_LEFT);
-
-	// Incarca eventualele actiuni demonstrative.
 	PopulateActionList();
 
-	// Incepe executia.
+	// Start drawing the interface and listening for events.
 	glutMainLoop();
 	return 0;
 }

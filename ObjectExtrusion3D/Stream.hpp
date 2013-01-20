@@ -43,7 +43,8 @@ private:
 		}
 	};
 
-	// Obiectele referite prin pointer nu pot fi serializate...
+	// Objects indicated by pointers are not serialized
+	// (the user must find a way to serialize them).
 	template <class T>
 	struct Helper<T *> {
 		static void Write(const T* value, Stream &stream) {}

@@ -39,9 +39,6 @@ class List : public ISerializable {
 private:
 	static const size_t DEFAULT_CAPACITY;
 
-	//
-	// Membrii.
-	//
 	T* array_;
 	size_t count_;
 	size_t capacity_;
@@ -123,8 +120,6 @@ public:
 			array_[count_++] = item;
 		}
 		else {
-			// Deplaseaza la dreapta cu 1 pozitie punctele
-			// de dupa pozitia de inserare.
 			memmove(&array_[index + 1], &array_[index], (count_ - index) * sizeof(T));
 			array_[index] = item;
 			count_++;
@@ -135,7 +130,6 @@ public:
 		assert(index < count_);
 		// --------------------------------
 		if(index == (count_ - 1)) {
-			// Ultimul punct.
 			count_--;
 		}
 		else {
@@ -157,7 +151,7 @@ public:
 	// Serialization.
 	//
 	virtual void Serialize(Stream &stream) const {
-		// Scrie numarul de element, apoi fiecare element in parte.
+		// First write the number of elements, then each element in turn.
 		stream.Write(count_);
 
 		for(size_t i = 0; i < count_; i++) {
@@ -183,9 +177,6 @@ public:
 		}
 	}
 	
-	//
-	// Operatori supraincarcati.
-	//
 	T &operator [](size_t index) const {
 		assert(index < count_);
 		// --------------------------------
@@ -206,11 +197,7 @@ public:
 	}
 	
 private:
-	//
-	// Metode private.
-	//
 	void EnsureSpace(size_t newCount) {
-		// Realoca vectorul daca este prea mic.
 		if(newCount > capacity_) {
 			T* oldArray = array_;
 			array_ = new T[capacity_ * 2];
@@ -221,7 +208,6 @@ private:
 	}
 };
 
-// Definitii pentru constante.
 template<class T>
 const size_t List<T>::DEFAULT_CAPACITY = 16;
 

@@ -160,9 +160,6 @@ public:
 	}
 	
 private:
-	//
-	// Metode private.
-	//
 	Point& Left(const List<Point> &points) {
 		double left = std::numeric_limits<double>::max();
 		int pos = 0;

@@ -88,17 +88,13 @@ public:
 	}
 
 protected:
-	//
-	// Metode purotected.
-	//
 	virtual Point* HitTestImpl(double x, double y, double radius,
-								const List<Point> &points) const {
+							   const List<Point> &points) const {
 		for(size_t i = 0; i < points.Count(); i++) {
 			double dx = points[i].X - x;
 			double dy = points[i].Y - y;
 
 			if((abs(dx) <= radius) && (abs(dy) <= radius)) {
-				// Punctul a fost gasit.
 				return &points[i];
 			}
 		}

@@ -47,7 +47,7 @@ private:
 	double stepX_;
 	double stepY_;
 	double stepZ_;
-	Point centroid_; // Centrul figurii.
+	Point centroid_; // Shape center point.
 
 public:
 	//
@@ -110,7 +110,7 @@ public:
 			Point &point = points[i];
 			double distance = point.Distance(centroid_);
 
-			// Calculeza unghiul format de punct cu centroidul pentru fiecare axa.
+			// Compute the angle between the point and the center on each axis.
 			double angle1 = atan2(point.Y - centroid_.Y,
 								   point.X - centroid_.X);
 			double angle2 = acos((point.Z - centroid_.Z) / distance);

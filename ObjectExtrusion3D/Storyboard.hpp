@@ -117,7 +117,7 @@ public:
 		List<Point> *firstPoints = new List<Point>(shape_->Points());
 		points_.Add(firstPoints);
 
-		// Initializeaza actiunea de start (si cele legate).
+		// Initialize the start action and the ones connected to it.
 		currentAction_->Initialize(*firstPoints);
 
 		for(size_t i = 1; i < actions_.Count(); i++) {
@@ -130,10 +130,11 @@ public:
 		if(actions_.Count() == 0) return false;
 		List<Point>* prevPoints = points_[points_.Count() - 1];
 
-		// Verifica daca trebuie sa trecem la urmatoarea actiune.
+		// Check if the next action should be executed.
 		if(currentStep_ == currentAction_->Steps()) {
-			// Sari peste toate actiunile legate.
+			// Skip over all connected actions.
 			size_t nextPosition = currentPosition_ + 1;
+
 			while(nextPosition < actions_.Count() && actions_[nextPosition]->WithPrevious()) {
 				nextPosition++;
 			}
@@ -150,14 +151,18 @@ public:
 				currentPosition_ = nextPosition;
 				currentStep_ = 0;
 			}
-			else return false; // Toate actiunile au fost executate.
+			else {
+				// All actions have been executed.
+				return false; 
+			}
 		}
 
-		// Genereaza urmatoarele puncte pe baza celor precedente.
+		// Compute the next state of the shape.
+		// The generated points depend directly on the previous ones.
 		List<Point>* newPoints = new List<Point>(*prevPoints);
 		points_.Add(newPoints);
 
-		// Aplica actiunea curenta si toate care sunt legate de aceasta.
+		// Apply to the points the current action and all actions liked with it.
 		currentAction_->Execute(currentStep_, *newPoints);
 
 		for(size_t i = currentPosition_ + 1; i < actions_.Count(); i++) {
@@ -176,7 +181,7 @@ public:
 		currentPosition_ = 0;
 		currentStep_ = 0;
 
-		// Sterge punctele calculate.
+		// Remove all computed points in the current step.
 		for(size_t i = 0; i < points_.Count(); i++) {
 			delete points_[i];
 		}
@@ -188,7 +193,7 @@ public:
 	// Serialization.
 	//
 	virtual void Serialize(Stream &stream) const {
-		// Se salveaza doar actiunile (impreuna cu tipul acestora).
+		// Only the actions are saved.
 		stream.Write(actions_.Count());
 
 		for(size_t i = 0; i < actions_.Count(); i++) {
@@ -199,7 +204,6 @@ public:
 
 	virtual void Deserialize(Stream &stream) {
 		ClearActions();
-		
 		size_t count;
 		stream.Read(count);
 
@@ -208,7 +212,6 @@ public:
 			stream.Read(temp);
 			ActionType type = (ActionType)temp;
 
-			// Creaza clasa corespunzatoare in functie de tip.
 			switch(type) {
 				case ACTION_TRANSLATE: {
 					TranslateAction *action = new TranslateAction();

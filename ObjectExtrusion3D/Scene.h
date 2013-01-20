@@ -116,8 +116,8 @@ public:
 		// Citeste figura.
 		int temp;
 		stream.Read(temp);
-
 		ShapeType shapeType = (ShapeType)temp;
+
 		switch(shapeType) {
 			case SHAPE_BASIC: {
 				shape_ = new Shape();
