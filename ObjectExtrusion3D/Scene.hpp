@@ -27,7 +27,7 @@
 
 #include "Storyboard.hpp"
 #include "Shape.hpp"
-#include "BezierShape.h"
+#include "BezierShape.hpp"
 #include "ISerializable.hpp"
 #include "Stream.hpp"
 #include <cstdlib>

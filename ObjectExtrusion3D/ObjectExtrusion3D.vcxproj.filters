@@ -41,13 +41,13 @@
     <ClInclude Include="Tests.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RotateAction.h">
+    <ClInclude Include="BezierShape.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BezierShape.h">
+    <ClInclude Include="RotateAction.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Scene.h">
+    <ClInclude Include="Scene.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

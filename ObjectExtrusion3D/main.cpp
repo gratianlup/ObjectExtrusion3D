@@ -35,8 +35,8 @@
 #include "IAction.hpp"
 #include "Storyboard.hpp"
 #include "BasicShapes.hpp"
-#include "RotateAction.h"
-#include "Scene.h"
+#include "RotateAction.hpp"
+#include "Scene.hpp"
 #include <glui.h>
 
 #define NOMINMAX

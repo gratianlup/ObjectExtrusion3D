@@ -32,7 +32,7 @@
 #include "Stream.hpp"
 #include "TranslateAction.hpp"
 #include "ScaleAction.hpp"
-#include "RotateAction.h"
+#include "RotateAction.hpp"
 
 class Storyboard {
 private:
