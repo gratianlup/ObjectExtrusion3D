@@ -10,8 +10,8 @@ Project done for the *"Computer Graphics"* course.
 Written in *C++* using *OpenGL* and *GLUI* for the GUI elements.  
 
 The following two videos demonstrate how the objects are drawn:  
-**[View glass model demonstration](http://youtu.be/X7BrC3BPPSU)**  
-**[View "musical instrument" model demonstration](http://youtu.be/Ndq8IkrdHyU)**  
+**[View glass model demonstration video](http://youtu.be/X7BrC3BPPSU)**  
+**[View "musical instrument" model demonstration video](http://youtu.be/Ndq8IkrdHyU)**  
 
 **Screenshots:**  
 
