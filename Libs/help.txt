@@ -1,0 +1,56 @@
+
+Pentru instalare glui v2_2
+
+
+1.In calea urmatoare pui fisierele (.h) din arhiva includ,
+ dc nu exista GL - faci tu un folder
+C:\Program Files\Microsoft Visual Studio\VC\Include\GL
+
+sau:
+
+C:\Program Files\Microsoft Visual Studio\VC98\Include\GL  sau ceva de genul
+
+
+
+2.aici bibliotecile (.lib)
+C:\Program Files\Microsoft Visual Studio\VC\Lib
+
+
+
+3.aici dll-urile 
+
+C:\WINDOWS\system 
+
+
+//
+In proiect:
+
+1.view - property pages - linker - input - additonal dependencies:
+						glut32.lib
+						glu32.lib
+						opengl32.lib
+2.tools - options - project and solution - vc++ directories 
+					show directories for - include files 
+					new line - calea spre folderul include (arhiva includ) trebuie pus in proiect,
+					new line calea:
+			C:\Program Files\Microsoft Visual Studio \VC\include		
+
+cand incluzi o biblioteca o incluzi cu GL in fata 
+la properties la proiect pui la linker toate bibliolecile: opengl32.lib glu32.lib glaux.lib glut32.lib glui32.lib
+
+
+si la tools -> options -> ceva cu director la include files - pui calea la C:\Program Files\Microsoft Visual Studio\VC98\Include\GL
+
+cam atat sper ca am scris tot 
+
+//***********************************
+//Pt eroarea: fatal error LNK1104: cannot open file 'LIBCD.lib' sau libc.lib 
+//***********************************
+
+
+1. In the Linker Input that you ignore libcd.lib (Project Properties -> Linker -> Input -> Ignore Specific Library), and you do that by just simply typing in the name of the library.
+2. You will now need to use the multi-threaded version of that library: libcmtd.lib, while you're still looking at the Input tab, go to Additional Dependencies and add libcmtd.lib (I think that the entries are space separated).
+3. Change the Runtime Library (Project Properties -> C/C++ -> Code Generation -> Runtime Library ) to Multi-threaded Debug (/MTd) 
+
+//**********************************************
+
