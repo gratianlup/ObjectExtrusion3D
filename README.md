@@ -6,7 +6,7 @@ Multiple transformations can be added to a storyboard and their effect viewed us
 The created models and the associated transformations can be saved to a file and loaded later.  
 It includes support for creating models using Bézier curves and editing of the control points.
 
-Project done for the "Computer Graphics" course.  
+Project done for the *"Computer Graphics"* course.  
 Written in *C++* using *OpenGL* and *GLUI* for the GUI.  
 
 The following two videos demonstrate how the objects are drawn:  
