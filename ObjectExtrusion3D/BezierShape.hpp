@@ -40,105 +40,108 @@
 
 class BezierShape : public Shape {
 private:
-	static const int POINTS_PER_LINE = 10;
-	static const int DEFAULT_POINTS = 32;
+    static const int POINTS_PER_LINE = 10;
+    static const int DEFAULT_POINTS = 32;
 
-	List<Point> anchorPoints_;
-	List<Point> controlPoints_;
+    List<Point> anchorPoints_;
+    List<Point> controlPoints_;
 
 public:
-	//
-	// Constructors / destructor.
-	//
-	BezierShape() {}
+    //
+    // Constructors / destructor.
+    //
+    BezierShape() {}
 
-	BezierShape(const List<Point> anchPoints, const List<Point> ctrlPoints) :
-		anchorPoints_(anchPoints), controlPoints_(ctrlPoints){}
+    BezierShape(const List<Point> anchPoints, const List<Point> ctrlPoints) :
+        anchorPoints_(anchPoints), controlPoints_(ctrlPoints){}
 
-	virtual ~BezierShape() {}
+    virtual ~BezierShape() {}
 
-	//
-	// Public methods.
-	//
-	virtual ShapeType Type() {
-		return SHAPE_BEZIER;
-	}
+    //
+    // Public methods.
+    //
+    virtual ShapeType Type() {
+        return SHAPE_BEZIER;
+    }
 
-	List<Point>& AnchorPoints() {
-		return anchorPoints_;
-	}
+    List<Point>& AnchorPoints() {
+        return anchorPoints_;
+    }
 
-	size_t AnchroCount() const {
-		return anchorPoints_.Count();
-	}
+    size_t AnchroCount() const {
+        return anchorPoints_.Count();
+    }
 
-	List<Point>& ControlPoints() {
-		return controlPoints_;
-	}
+    List<Point>& ControlPoints() {
+        return controlPoints_;
+    }
 
-	size_t ControlCount() const {
-		return controlPoints_.Count();
-	}
+    size_t ControlCount() const {
+        return controlPoints_.Count();
+    }
 
-	virtual List<Point>& Points() {
-		points_.Clear();
-		if(anchorPoints_.Count() < 2) return points_;
+    virtual List<Point>& Points() {
+        points_.Clear();
+        
+        if(anchorPoints_.Count() < 2) {
+            return points_;
+        }
 
-		// Se adauga la lista AnchorCount - 1 curbe Bezier.
-		for(size_t i = 0; i < anchorPoints_.Count() - 1; i++) {
-			AddBezierPoints(anchorPoints_[i], anchorPoints_[i + 1],
-						   controlPoints_[2*i], controlPoints_[2*i + 1]);
-		}
+        // Se adauga la lista AnchorCount - 1 curbe Bezier.
+        for(size_t i = 0; i < anchorPoints_.Count() - 1; i++) {
+            AddBezierPoints(anchorPoints_[i], anchorPoints_[i + 1],
+                            controlPoints_[2*i], controlPoints_[2*i + 1]);
+        }
 
-		return points_;
-	}
+        return points_;
+    }
 
-	virtual void Clear() {
-		anchorPoints_.Clear();
-		controlPoints_.Clear();
-	}
+    virtual void Clear() {
+        anchorPoints_.Clear();
+        controlPoints_.Clear();
+    }
 
-	virtual Point* HitTest(double x, double y, double radius) const {
-		Point *point = HitTestImpl(x, y, radius, controlPoints_);
+    virtual Point* HitTest(double x, double y, double radius) const {
+        Point *point = HitTestImpl(x, y, radius, controlPoints_);
 
-		if(point == NULL) {
-			point = HitTestImpl(x, y, radius, anchorPoints_);
-		}
-		
-		return point;
-	}
+        if(point == NULL) {
+            point = HitTestImpl(x, y, radius, anchorPoints_);
+        }
+        
+        return point;
+    }
 
-	//
-	// Serialization.
-	//
-	virtual void Serialize(Stream &stream) const {
-		stream.Write(anchorPoints_);
-		stream.Write(controlPoints_);
-	}
+    //
+    // Serialization.
+    //
+    virtual void Serialize(Stream &stream) const {
+        stream.Write(anchorPoints_);
+        stream.Write(controlPoints_);
+    }
 
-	virtual void Deserialize(Stream &stream) {
-		stream.Read(anchorPoints_);
-		stream.Read(controlPoints_);
-	}
+    virtual void Deserialize(Stream &stream) {
+        stream.Read(anchorPoints_);
+        stream.Read(controlPoints_);
+    }
 
-	void AddBezierPoints(const Point &anchor1, const Point &anchor2,
-						 const Point &control1, const Point &control2) {
-		double u = 0;
-		double stepU = 1.0 / (POINTS_PER_LINE - 1);
+    void AddBezierPoints(const Point &anchor1, const Point &anchor2,
+                         const Point &control1, const Point &control2) {
+        double u = 0;
+        double stepU = 1.0 / (POINTS_PER_LINE - 1);
 
-		for(size_t i = 0; i < POINTS_PER_LINE; i++) {
-			double x = pow(u,3)*(anchor2.X+3*(control1.X-control2.X)-anchor1.X) +
-					   3*pow(u,2)*(anchor1.X-2*control1.X+control2.X) +
-					   3*u*(control1.X-anchor1.X)+anchor1.X;
+        for(size_t i = 0; i < POINTS_PER_LINE; i++) {
+            double x = pow(u,3)*(anchor2.X+3*(control1.X-control2.X)-anchor1.X) +
+                       3*pow(u,2)*(anchor1.X-2*control1.X+control2.X) +
+                       3*u*(control1.X-anchor1.X)+anchor1.X;
 
-			double y = pow(u,3)*(anchor2.Y+3*(control1.Y-control2.Y)-anchor1.Y) +
-					   3*pow(u,2)*(anchor1.Y-2*control1.Y+control2.Y) +
-					   3*u*(control1.Y-anchor1.Y)+anchor1.Y;
-		  
-			points_.Add(Point(x, y));
-			u += stepU;
-		}
-	}
+            double y = pow(u,3)*(anchor2.Y+3*(control1.Y-control2.Y)-anchor1.Y) +
+                       3*pow(u,2)*(anchor1.Y-2*control1.Y+control2.Y) +
+                       3*u*(control1.Y-anchor1.Y)+anchor1.Y;
+          
+            points_.Add(Point(x, y));
+            u += stepU;
+        }
+    }
 };
 
 #endif

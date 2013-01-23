@@ -37,145 +37,145 @@
 
 class Stream {
 private:
-	template <class T>
-	struct Helper {
-		static void Write(const T &value, Stream &stream) {
-			value.Serialize(stream);
-		}
+    template <class T>
+    struct Helper {
+        static void Write(const T &value, Stream &stream) {
+            value.Serialize(stream);
+        }
 
-		static void Read(T &value, Stream &stream) {
-			value.Deserialize(stream);
-		}
-	};
+        static void Read(T &value, Stream &stream) {
+            value.Deserialize(stream);
+        }
+    };
 
-	// Objects indicated by pointers are not serialized
-	// (the user must find a way to serialize them).
-	template <class T>
-	struct Helper<T *> {
-		static void Write(const T* value, Stream &stream) {}
-		static void Read(T* value, Stream &stream) {}
-	};
+    // Objects indicated by pointers are not serialized
+    // (the user must find a way to serialize them).
+    template <class T>
+    struct Helper<T *> {
+        static void Write(const T* value, Stream &stream) {}
+        static void Read(T* value, Stream &stream) {}
+    };
 
-	template <>
-	struct Helper<char> {
-		static void Write(const char &value, Stream &stream) { stream.WriteChar(value); }
-		static void Read(char &value, Stream &stream) { stream.ReadChar(value); }
-	};
+    template <>
+    struct Helper<char> {
+        static void Write(const char &value, Stream &stream) { stream.WriteChar(value); }
+        static void Read(char &value, Stream &stream) { stream.ReadChar(value); }
+    };
 
-	template <>
-	struct Helper<wchar_t> {
-		static void Write(const wchar_t &value, Stream &stream) { stream.WriteWChar(value); }
-		static void Read(wchar_t &value, Stream &stream) { stream.ReadWChar(value); }
-	};
+    template <>
+    struct Helper<wchar_t> {
+        static void Write(const wchar_t &value, Stream &stream) { stream.WriteWChar(value); }
+        static void Read(wchar_t &value, Stream &stream) { stream.ReadWChar(value); }
+    };
 
-	template <>
-	struct Helper<short int> {
-		static void Write(const short int &value, Stream &stream) { stream.WriteShort(value); }
-		static void Read(short int &value, Stream &stream) { stream.ReadShort(value); }
-	};
+    template <>
+    struct Helper<short int> {
+        static void Write(const short int &value, Stream &stream) { stream.WriteShort(value); }
+        static void Read(short int &value, Stream &stream) { stream.ReadShort(value); }
+    };
 
-	template <>
-	struct Helper<int> {
-		static void Write(const int &value, Stream &stream) { stream.WriteInt(value); }
-		static void Read(int &value, Stream &stream) { stream.ReadInt(value); }
-	};
+    template <>
+    struct Helper<int> {
+        static void Write(const int &value, Stream &stream) { stream.WriteInt(value); }
+        static void Read(int &value, Stream &stream) { stream.ReadInt(value); }
+    };
 
-	template <>
-	struct Helper<float> {
-		static void Write(const float &value, Stream &stream) { stream.WriteFloat(value); }
-		static void Read(float &value, Stream &stream) { stream.ReadFloat(value); } 
-	};
+    template <>
+    struct Helper<float> {
+        static void Write(const float &value, Stream &stream) { stream.WriteFloat(value); }
+        static void Read(float &value, Stream &stream) { stream.ReadFloat(value); } 
+    };
 
-	template <>
-	struct Helper<double> {
-		static void Write(const double &value, Stream &stream) { stream.WriteDouble(value); }
-		static void Read(double &value, Stream &stream) { stream.ReadDouble(value); }
-	};
+    template <>
+    struct Helper<double> {
+        static void Write(const double &value, Stream &stream) { stream.WriteDouble(value); }
+        static void Read(double &value, Stream &stream) { stream.ReadDouble(value); }
+    };
 
-	template <>
-	struct Helper<size_t> {
-		static void Write(const size_t &value, Stream &stream) { stream.WriteSizeT(value); }
-		static void Read(size_t &value, Stream &stream) { stream.ReadSizeT(value); }
-	};
+    template <>
+    struct Helper<size_t> {
+        static void Write(const size_t &value, Stream &stream) { stream.WriteSizeT(value); }
+        static void Read(size_t &value, Stream &stream) { stream.ReadSizeT(value); }
+    };
 
-	template <>
-	struct Helper<bool> {
-		static void Write(const bool &value, Stream &stream) { stream.WriteBool(value); }
-		static void Read(bool &value, Stream &stream) { stream.ReadBool(value); }
-	};
+    template <>
+    struct Helper<bool> {
+        static void Write(const bool &value, Stream &stream) { stream.WriteBool(value); }
+        static void Read(bool &value, Stream &stream) { stream.ReadBool(value); }
+    };
 
-	HANDLE stream_;
+    HANDLE stream_;
 
 public:
-	//
-	// Constructors / destructor.
-	//
-	Stream(wchar_t *path, bool write = false) {
-		Open(path, write);
-	}
+    //
+    // Constructors / destructor.
+    //
+    Stream(wchar_t *path, bool write = false) {
+        Open(path, write);
+    }
 
-	~Stream() {
-		Close();
-	}
+    ~Stream() {
+        Close();
+    }
 
-	//
-	// Public methods.
-	//
-	bool IsValid() { 
-		return stream_ != INVALID_HANDLE_VALUE; 
-	}
+    //
+    // Public methods.
+    //
+    bool IsValid() { 
+        return stream_ != INVALID_HANDLE_VALUE; 
+    }
 
-	bool Open(wchar_t *path, bool write = false) {
-		unsigned long openMode = write ? CREATE_ALWAYS : OPEN_EXISTING;
+    bool Open(wchar_t *path, bool write = false) {
+        unsigned long openMode = write ? CREATE_ALWAYS : OPEN_EXISTING;
 
-		stream_ = CreateFile(path, GENERIC_READ | GENERIC_WRITE, 
-							 FILE_SHARE_READ, NULL, openMode, 
-							 FILE_ATTRIBUTE_NORMAL, NULL);
-		return stream_ != INVALID_HANDLE_VALUE;
-	}
+        stream_ = CreateFile(path, GENERIC_READ | GENERIC_WRITE, 
+                             FILE_SHARE_READ, NULL, openMode, 
+                             FILE_ATTRIBUTE_NORMAL, NULL);
+        return stream_ != INVALID_HANDLE_VALUE;
+    }
 
-	void Close() { 
-		CloseHandle(stream_); 
-	}
+    void Close() { 
+        CloseHandle(stream_); 
+    }
 
-	void WriteChar(char value)        { WriteBytes(&value, sizeof(char)); }
-	void WriteWChar(wchar_t value)    { WriteBytes(&value, sizeof(wchar_t)); }
-	void WriteShort(short int value)  { WriteBytes(&value, sizeof(short int)); }
-	void WriteInt(int value)          { WriteBytes(&value, sizeof(int)); }
-	void WriteFloat(float value)      { WriteBytes(&value, sizeof(float)); }
-	void WriteDouble(double value)    { WriteBytes(&value, sizeof(double)); }
-	void WriteSizeT(size_t value)     { WriteBytes(&value, sizeof(size_t)); }
-	void WriteBool(bool value)        { WriteBytes(&value, sizeof(bool)); }
+    void WriteChar(char value)        { WriteBytes(&value, sizeof(char));      }
+    void WriteWChar(wchar_t value)    { WriteBytes(&value, sizeof(wchar_t));   }
+    void WriteShort(short int value)  { WriteBytes(&value, sizeof(short int)); }
+    void WriteInt(int value)          { WriteBytes(&value, sizeof(int));       }
+    void WriteFloat(float value)      { WriteBytes(&value, sizeof(float));     }
+    void WriteDouble(double value)    { WriteBytes(&value, sizeof(double));    }
+    void WriteSizeT(size_t value)     { WriteBytes(&value, sizeof(size_t));    }
+    void WriteBool(bool value)        { WriteBytes(&value, sizeof(bool)); }
 
-	template<class T>
-	void Write(const T &value) {
-		Helper<T>::Write(value, *this);
-	}
+    template<class T>
+    void Write(const T &value) {
+        Helper<T>::Write(value, *this);
+    }
 
-	void ReadChar(char &value)        { ReadBytes(&value, sizeof(char)); }
-	void ReadWChar(wchar_t &value)    { ReadBytes(&value, sizeof(wchar_t)); }
-	void ReadShort(short int &value)  { ReadBytes(&value, sizeof(short int)); }
-	void ReadInt(int &value)          { ReadBytes(&value, sizeof(int)); }
-	void ReadFloat(float &value)      { ReadBytes(&value, sizeof(float)); }
-	void ReadDouble(double &value)    { ReadBytes(&value, sizeof(double)); }
-	void ReadSizeT(size_t &value)     { ReadBytes(&value, sizeof(size_t)); }
-	void ReadBool(bool &value)        { ReadBytes(&value, sizeof(bool)); }
+    void ReadChar(char &value)        { ReadBytes(&value, sizeof(char));      }
+    void ReadWChar(wchar_t &value)    { ReadBytes(&value, sizeof(wchar_t));   }
+    void ReadShort(short int &value)  { ReadBytes(&value, sizeof(short int)); }
+    void ReadInt(int &value)          { ReadBytes(&value, sizeof(int));       }
+    void ReadFloat(float &value)      { ReadBytes(&value, sizeof(float));     }
+    void ReadDouble(double &value)    { ReadBytes(&value, sizeof(double));    }
+    void ReadSizeT(size_t &value)     { ReadBytes(&value, sizeof(size_t));    }
+    void ReadBool(bool &value)        { ReadBytes(&value, sizeof(bool));      }
 
-	template<class T>
-	void Read(T &value) {
-		Helper<T>::Read(value, *this);
-	}
+    template<class T>
+    void Read(T &value) {
+        Helper<T>::Read(value, *this);
+    }
 
 protected:
-	virtual void WriteBytes(void *data, size_t size) {
-		unsigned long written;
-		WriteFile(stream_, data, size, &written, NULL);
-	}
+    virtual void WriteBytes(void *data, size_t size) {
+        unsigned long written;
+        WriteFile(stream_, data, size, &written, NULL);
+    }
 
-	virtual void ReadBytes(void *data, size_t size) {
-		unsigned long read;
-		ReadFile(stream_, data, size, &read, NULL);
-	}
+    virtual void ReadBytes(void *data, size_t size) {
+        unsigned long read;
+        ReadFile(stream_, data, size, &read, NULL);
+    }
 };
 
 #endif

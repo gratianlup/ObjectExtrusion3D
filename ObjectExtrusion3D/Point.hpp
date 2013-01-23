@@ -40,126 +40,126 @@
 
 class Point : public ISerializable {
 public:
-	static const double EPSILON;
+    static const double EPSILON;
 
-	double X;
-	double Y;
-	double Z;
-	
-	//
-	// Constructors.
-	//
-	Point() : X(0), Y(0), Z(0) {}
-	Point(double x, double y) : X(x), Y(y), Z(0) {}
-	Point(double x, double y, double z) : X(x), Y(y), Z(z) {}
-	Point(const Point &other) : X(other.X), Y(other.Y), Z(other.Z) {}
-	
-	//
-	// Public methods.
-	//
-	double Distance(const Point &other) const {
-		double dxSq = (X - other.X) * (X - other.X);
-		double dySq = (Y - other.Y) * (Y - other.Y);
-		double dzSq = (Z - other.Z) * (Z - other.Z);
-		return sqrt(dxSq + dySq + dzSq);
-	}
-	
-	double Magnitutde() const {
-		return sqrt(X*X + Y*Y + Z*Z);
-	}
+    double X;
+    double Y;
+    double Z;
+    
+    //
+    // Constructors.
+    //
+    Point() : X(0), Y(0), Z(0) {}
+    Point(double x, double y) : X(x), Y(y), Z(0) {}
+    Point(double x, double y, double z) : X(x), Y(y), Z(z) {}
+    Point(const Point &other) : X(other.X), Y(other.Y), Z(other.Z) {}
+    
+    //
+    // Public methods.
+    //
+    double Distance(const Point &other) const {
+        double dxSq = (X - other.X) * (X - other.X);
+        double dySq = (Y - other.Y) * (Y - other.Y);
+        double dzSq = (Z - other.Z) * (Z - other.Z);
+        return sqrt(dxSq + dySq + dzSq);
+    }
+    
+    double Magnitutde() const {
+        return sqrt(X*X + Y*Y + Z*Z);
+    }
 
-	static Point Centroid(const List<Point> &points) {
-		double sumX = 0;
-		double sumY = 0;
-		double sumZ = 0;
+    static Point Centroid(const List<Point> &points) {
+        double sumX = 0;
+        double sumY = 0;
+        double sumZ = 0;
 
-		if(points.Count() == 0) {
-			return Point();
-		}
+        if(points.Count() == 0) {
+            return Point();
+        }
 
-		size_t count = points.Count();
+        size_t count = points.Count();
 
-		for(size_t i = 0; i < count; i++) {
-			Point &point = points[i];
-			sumX += point.X;
-			sumY += point.Y;
-			sumZ += point.Z;
-		}
+        for(size_t i = 0; i < count; i++) {
+            Point &point = points[i];
+            sumX += point.X;
+            sumY += point.Y;
+            sumZ += point.Z;
+        }
 
-		return Point(sumX / count, sumY / count, sumZ / count);
-	}
+        return Point(sumX / count, sumY / count, sumZ / count);
+    }
 
-	//
-	// Serialization.
-	//
-	virtual void Serialize(Stream &stream) const {
-		// Scrie valorile.
-		stream.Write(X);
-		stream.Write(Y);
-		stream.Write(Z);
-	}
+    //
+    // Serialization.
+    //
+    virtual void Serialize(Stream &stream) const {
+        // Scrie valorile.
+        stream.Write(X);
+        stream.Write(Y);
+        stream.Write(Z);
+    }
 
-	virtual void Deserialize(Stream &stream) {
-		stream.Read(X);
-		stream.Read(Y);
-		stream.Read(Z);
-	}
-	
-	bool operator ==(const Point &other) const {
-		if(&other == this) return true;
-		
-		double dx = (X - other.X);
-		double dy = (Y - other.Y);
-		double dz = (Z - other.Z);
-		return (abs(dx) < EPSILON) &&
-				(abs(dy) < EPSILON) &&
-				(abs(dz) < EPSILON);
-	}
-	
-	bool operator !=(const Point &other) const {
-		return !operator ==(other); 
-	}
-	
-	Point &operator =(const Point &other) {
-		X = other.X;
-		Y = other.Y;
-		Z = other.Z;
-		return *this;
-	}
-	
-	Point &operator +(const Point &other) {
-		X += other.X;
-		Y += other.Y;
-		Z += other.Z;
-		return *this;
-	}
-	
-	Point &operator -(const Point &other) {
-		X -= other.X;
-		Y -= other.Y;
-		Z -= other.Z;
-		return *this;
-	}
+    virtual void Deserialize(Stream &stream) {
+        stream.Read(X);
+        stream.Read(Y);
+        stream.Read(Z);
+    }
+    
+    bool operator ==(const Point &other) const {
+        if(&other == this) return true;
+        
+        double dx = (X - other.X);
+        double dy = (Y - other.Y);
+        double dz = (Z - other.Z);
+        return (abs(dx) < EPSILON) &&
+                (abs(dy) < EPSILON) &&
+                (abs(dz) < EPSILON);
+    }
+    
+    bool operator !=(const Point &other) const {
+        return !operator ==(other); 
+    }
+    
+    Point &operator =(const Point &other) {
+        X = other.X;
+        Y = other.Y;
+        Z = other.Z;
+        return *this;
+    }
+    
+    Point &operator +(const Point &other) {
+        X += other.X;
+        Y += other.Y;
+        Z += other.Z;
+        return *this;
+    }
+    
+    Point &operator -(const Point &other) {
+        X -= other.X;
+        Y -= other.Y;
+        Z -= other.Z;
+        return *this;
+    }
 
-	Point &operator *(const Point &other) {
-		X *= other.X;
-		Y *= other.Y;
-		Z *= other.Z;
-		return *this;
-	}
+    Point &operator *(const Point &other) {
+        X *= other.X;
+        Y *= other.Y;
+        Z *= other.Z;
+        return *this;
+    }
 
-	Point &operator *(double value) {
-		X *= value;
-		Y *= value;
-		Z *= value;
-		return *this;
-	}
+    Point &operator *(double value) {
+        X *= value;
+        Y *= value;
+        Z *= value;
+        return *this;
+    }
 
-	Point &operator /(double value) {
-		X /= value;
-		Y /= value;
-		Z /= value;
-	}
+    Point &operator /(double value) {
+        X /= value;
+        Y /= value;
+        Z /= value;
+    }
 };
 
 const double Point::EPSILON = 0.00001;

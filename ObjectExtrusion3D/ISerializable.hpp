@@ -37,8 +37,8 @@
 
 class ISerializable {
 public:
-	virtual void Serialize(Stream &s) const = 0;
-	virtual void Deserialize(Stream &s) = 0;
+    virtual void Serialize(Stream &s) const = 0;
+    virtual void Deserialize(Stream &s) = 0;
 };
 
 #endif

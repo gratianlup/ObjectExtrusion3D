@@ -46,105 +46,105 @@
 
 class ScaleAction: public IAction {
 private:
-	double scaleX_;
-	double scaleY_;
-	double scaleZ_;
-	double stepX_;
-	double stepY_;
-	double stepZ_;
-	Point centroid_; // Shape center point.
+    double scaleX_;
+    double scaleY_;
+    double scaleZ_;
+    double stepX_;
+    double stepY_;
+    double stepZ_;
+    Point centroid_; // Shape center point.
 
 public:
-	//
-	// Constructors.
-	//
-	ScaleAction() : IAction() {}
+    //
+    // Constructors.
+    //
+    ScaleAction() : IAction() {}
 
-	ScaleAction(double sx, double sy, double sz) : IAction(),
-		scaleX_(sx), scaleY_(sy), scaleZ_(sz) {}
+    ScaleAction(double sx, double sy, double sz) : IAction(),
+        scaleX_(sx), scaleY_(sy), scaleZ_(sz) {}
 
-	//
-	// Public methods.
-	//
-	virtual ActionType Type() { 
-		return ACTION_SCALE; 
-	}
+    //
+    // Public methods.
+    //
+    virtual ActionType Type() { 
+        return ACTION_SCALE; 
+    }
 
-	double ScaleX() {
-		return scaleX_;
-	}
+    double ScaleX() {
+        return scaleX_;
+    }
 
-	void SetScaleX(double value) {
-		scaleX_ = value;
-	}
+    void SetScaleX(double value) {
+        scaleX_ = value;
+    }
 
-	double ScaleY() {
-		return scaleY_;
-	}
+    double ScaleY() {
+        return scaleY_;
+    }
 
-	void SetScaleY(double value) {
-		scaleY_ = value;
-	}
+    void SetScaleY(double value) {
+        scaleY_ = value;
+    }
 
-	double ScaleZ() {
-		return scaleZ_;
-	}
+    double ScaleZ() {
+        return scaleZ_;
+    }
 
-	void SetScaleZ(double value) {
-		scaleZ_ = value;
-	}
+    void SetScaleZ(double value) {
+        scaleZ_ = value;
+    }
 
-	virtual void Initialize(const List<Point> &points) {
-		stepX_ = scaleX_ / (double)steps_;
-		stepY_ = scaleY_ / (double)steps_;
-		stepZ_ = scaleZ_ / (double)steps_;
-	}
+    virtual void Initialize(const List<Point> &points) {
+        stepX_ = scaleX_ / (double)steps_;
+        stepY_ = scaleY_ / (double)steps_;
+        stepZ_ = scaleZ_ / (double)steps_;
+    }
 
-	virtual void Execute(int step, List<Point> &points) {
-		centroid_ = Point::Centroid(points);
-		double minDistance = std::numeric_limits<double>::max();
+    virtual void Execute(int step, List<Point> &points) {
+        centroid_ = Point::Centroid(points);
+        double minDistance = std::numeric_limits<double>::max();
 
-		for(size_t i = 0; i < points.Count(); i++) {
-			double distance = points[i].Distance(centroid_);
-			if(distance < minDistance) {
-				minDistance = distance;
-			}
-		}
+        for(size_t i = 0; i < points.Count(); i++) {
+            double distance = points[i].Distance(centroid_);
+            if(distance < minDistance) {
+                minDistance = distance;
+            }
+        }
 
-		for(size_t i = 0; i < points.Count(); i++) {
-			Point &point = points[i];
-			double distance = point.Distance(centroid_);
+        for(size_t i = 0; i < points.Count(); i++) {
+            Point &point = points[i];
+            double distance = point.Distance(centroid_);
 
-			// Compute the angle between the point and the center on each axis.
-			double angle1 = atan2(point.Y - centroid_.Y,
-								   point.X - centroid_.X);
-			double angle2 = acos((point.Z - centroid_.Z) / distance);
-			double scale = distance / minDistance;
+            // Compute the angle between the point and the center on each axis.
+            double angle1 = atan2(point.Y - centroid_.Y,
+                                  point.X - centroid_.X);
+            double angle2 = acos((point.Z - centroid_.Z) / distance);
+            double scale = distance / minDistance;
 
-			point.X = centroid_.X + ((distance + stepX_ * scale) * cos(angle1) * sin(angle2));
-			point.Y = centroid_.Y + ((distance + stepY_ * scale) * sin(angle1) * sin(angle2));
-			point.Z = centroid_.Z + ((distance + stepZ_ * scale) * cos(angle2));
-		}
-	}
+            point.X = centroid_.X + ((distance + stepX_ * scale) * cos(angle1) * sin(angle2));
+            point.Y = centroid_.Y + ((distance + stepY_ * scale) * sin(angle1) * sin(angle2));
+            point.Z = centroid_.Z + ((distance + stepZ_ * scale) * cos(angle2));
+        }
+    }
 
-	//
-	// Serialization.
-	//
-	virtual void Serialize(Stream &stream) const {
-		stream.Write(steps_);
-		stream.Write(withPrevious_);
-		stream.Write(scaleX_);
-		stream.Write(scaleY_);
-		stream.Write(scaleZ_);
-	}
+    //
+    // Serialization.
+    //
+    virtual void Serialize(Stream &stream) const {
+        stream.Write(steps_);
+        stream.Write(withPrevious_);
+        stream.Write(scaleX_);
+        stream.Write(scaleY_);
+        stream.Write(scaleZ_);
+    }
 
-	virtual void Deserialize(Stream &stream) {
-		stream.Read(steps_);
-		stream.Read(withPrevious_);
-		stream.Read(scaleX_);
-		stream.Read(scaleY_);
-		stream.Read(scaleZ_);
-	}
+    virtual void Deserialize(Stream &stream) {
+        stream.Read(steps_);
+        stream.Read(withPrevious_);
+        stream.Read(scaleX_);
+        stream.Read(scaleY_);
+        stream.Read(scaleZ_);
+    }
 };
 
 #endif

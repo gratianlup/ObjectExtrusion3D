@@ -41,82 +41,82 @@
 
 class TranslateAction: public IAction {
 private:
-	double deltaX_;
-	double deltaY_;
-	double deltaZ_;
-	
+    double deltaX_;
+    double deltaY_;
+    double deltaZ_;
+    
 public:
-	//
-	// Constructors.
-	//
-	TranslateAction() : IAction() {}
+    //
+    // Constructors.
+    //
+    TranslateAction() : IAction() {}
 
-	TranslateAction(double dx, double dy, double dz) : IAction(),
-		deltaX_(dx), deltaY_(dy), deltaZ_(dz) {}
+    TranslateAction(double dx, double dy, double dz) : IAction(),
+        deltaX_(dx), deltaY_(dy), deltaZ_(dz) {}
 
-	//
-	// Public methods.
-	//
-	virtual ActionType Type() { 
-		return ACTION_TRANSLATE; 
-	}
+    //
+    // Public methods.
+    //
+    virtual ActionType Type() { 
+        return ACTION_TRANSLATE; 
+    }
 
-	double DeltaX() { 
-		return deltaX_;
-	}
+    double DeltaX() { 
+        return deltaX_;
+    }
 
-	void SetDeltaX(double value) {
-		deltaX_ = value;
-	}
+    void SetDeltaX(double value) {
+        deltaX_ = value;
+    }
 
-	double DeltaY() { 
-		return deltaY_;
-	}
+    double DeltaY() { 
+        return deltaY_;
+    }
 
-	void SetDeltaY(double value) {
-		deltaY_ = value;
-	}
+    void SetDeltaY(double value) {
+        deltaY_ = value;
+    }
 
-	double DeltaZ() { 
-		return deltaZ_;
-	}
+    double DeltaZ() { 
+        return deltaZ_;
+    }
 
-	void SetDeltaZ(double value) {
-		deltaZ_ = value;
-	}
+    void SetDeltaZ(double value) {
+        deltaZ_ = value;
+    }
 
-	virtual void Execute(int step, List<Point> &points) {
-		double dx = deltaX_ / (double)steps_;
-		double dy = deltaY_ / (double)steps_;
-		double dz = deltaZ_ / (double)steps_;
-		size_t count = points.Count();
+    virtual void Execute(int step, List<Point> &points) {
+        double dx = deltaX_ / (double)steps_;
+        double dy = deltaY_ / (double)steps_;
+        double dz = deltaZ_ / (double)steps_;
+        size_t count = points.Count();
 
-		for(size_t i = 0; i < count; i++) {
-			Point &point = points[i];
-			point.X += dx;
-			point.Y += dy;
-			point.Z += dz;
-		}
-	}
+        for(size_t i = 0; i < count; i++) {
+            Point &point = points[i];
+            point.X += dx;
+            point.Y += dy;
+            point.Z += dz;
+        }
+    }
 
-	//
-	// Serialization.
-	//
-	virtual void Serialize(Stream &stream) const {
-		stream.Write(steps_);
-		stream.Write(withPrevious_);
-		stream.Write(deltaX_);
-		stream.Write(deltaY_);
-		stream.Write(deltaZ_);
-	}
+    //
+    // Serialization.
+    //
+    virtual void Serialize(Stream &stream) const {
+        stream.Write(steps_);
+        stream.Write(withPrevious_);
+        stream.Write(deltaX_);
+        stream.Write(deltaY_);
+        stream.Write(deltaZ_);
+    }
 
-	virtual void Deserialize(Stream &stream) {
-		stream.Read(steps_);
-		stream.Read(withPrevious_);
-		stream.Read(deltaX_);
-		stream.Read(deltaY_);
-		stream.Read(deltaZ_);
-	}
+    virtual void Deserialize(Stream &stream) {
+        stream.Read(steps_);
+        stream.Read(withPrevious_);
+        stream.Read(deltaX_);
+        stream.Read(deltaY_);
+        stream.Read(deltaZ_);
+    }
 };
 
 #endif

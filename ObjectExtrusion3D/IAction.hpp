@@ -37,40 +37,40 @@
 #include "ISerializable.hpp"
 
 enum ActionType {
-	ACTION_ROTATE,
-	ACTION_TRANSLATE,
-	ACTION_SCALE
+    ACTION_ROTATE,
+    ACTION_TRANSLATE,
+    ACTION_SCALE
 };
 
 // Interface that must be implemented by all transform actions.
 class IAction : public ISerializable {
 protected:
-	bool withPrevious_;
-	int steps_;
+    bool withPrevious_;
+    int steps_;
 
 public:
-	IAction() : withPrevious_(false), steps_(0) {}
-	~IAction() {}
+    IAction() : withPrevious_(false), steps_(0) {}
+    ~IAction() {}
 
-	virtual ActionType Type() = 0;
-	virtual void Initialize(const List<Point> &points) {}
-	virtual void Execute(int step, List<Point> &points) = 0;
-	
-	bool WithPrevious() { 
-		return withPrevious_; 
-	}
+    virtual ActionType Type() = 0;
+    virtual void Initialize(const List<Point> &points) {}
+    virtual void Execute(int step, List<Point> &points) = 0;
+    
+    bool WithPrevious() { 
+        return withPrevious_; 
+    }
 
-	void SetWithPrevious(bool value) { 
-		withPrevious_ = value; 
-	}
+    void SetWithPrevious(bool value) { 
+        withPrevious_ = value; 
+    }
 
-	int Steps() { 
-		return steps_;
-	}
+    int Steps() { 
+        return steps_;
+    }
 
-	void SetSteps(int value) { 
-		steps_ = value; 
-	}
+    void SetSteps(int value) { 
+        steps_ = value; 
+    }
 };
 
 #endif

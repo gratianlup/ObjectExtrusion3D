@@ -40,72 +40,72 @@
 #include <cmath>
 
 enum  ShapeType {
-	SHAPE_BASIC,
-	SHAPE_BEZIER
+    SHAPE_BASIC,
+    SHAPE_BEZIER
 };
 
 class Shape : public ISerializable {
 protected:
-	List<Point> points_;
+    List<Point> points_;
 
 public:
-	//
-	// Constructors.
-	//
-	Shape() {}
+    //
+    // Constructors.
+    //
+    Shape() {}
 
-	Shape(const List<Point> &points) : points_(points) {}
+    Shape(const List<Point> &points) : points_(points) {}
 
-	virtual ~Shape() {}
+    virtual ~Shape() {}
 
-	//
-	// Public methods.
-	//
-	virtual ShapeType Type() { 
-		return SHAPE_BASIC; 
-	}
+    //
+    // Public methods.
+    //
+    virtual ShapeType Type() { 
+        return SHAPE_BASIC; 
+    }
 
-	virtual List<Point>& Points() {
-		return points_; 
-	}
+    virtual List<Point>& Points() {
+        return points_; 
+    }
 
-	virtual int PointCount() const { 
-		return points_.Count(); 
-	}
+    virtual int PointCount() const { 
+        return points_.Count(); 
+    }
 
-	virtual Point* HitTest(double x, double y, double radius) const {
-		return HitTestImpl(x, y, radius, points_);
-	}
+    virtual Point* HitTest(double x, double y, double radius) const {
+        return HitTestImpl(x, y, radius, points_);
+    }
 
-	virtual void Clear() {
-		points_.Clear();
-	}
+    virtual void Clear() {
+        points_.Clear();
+    }
 
-	//
-	// Serialization.
-	//
-	virtual void Serialize(Stream &stream) const {
-		stream.Write(points_);
-	}
+    //
+    // Serialization.
+    //
+    virtual void Serialize(Stream &stream) const {
+        stream.Write(points_);
+    }
 
-	virtual void Deserialize(Stream &stream) {
-		stream.Read(points_);
-	}
+    virtual void Deserialize(Stream &stream) {
+        stream.Read(points_);
+    }
 
 protected:
-	virtual Point* HitTestImpl(double x, double y, double radius,
-							   const List<Point> &points) const {
-		for(size_t i = 0; i < points.Count(); i++) {
-			double dx = points[i].X - x;
-			double dy = points[i].Y - y;
+    virtual Point* HitTestImpl(double x, double y, double radius,
+                               const List<Point> &points) const {
+        for(size_t i = 0; i < points.Count(); i++) {
+            double dx = points[i].X - x;
+            double dy = points[i].Y - y;
 
-			if((abs(dx) <= radius) && (abs(dy) <= radius)) {
-				return &points[i];
-			}
-		}
+            if((abs(dx) <= radius) && (abs(dy) <= radius)) {
+                return &points[i];
+            }
+        }
 
-		return NULL;
-	}
+        return NULL;
+    }
 };
 
 #endif

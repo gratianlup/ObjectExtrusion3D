@@ -40,91 +40,91 @@
 
 class ShapeGenerator {
 private:
-	static const int DEFAULT_POINTS = 32;
+    static const int DEFAULT_POINTS = 32;
 
 public:
-	static Shape* Circle(double radius, size_t points, bool onZ = true) {
-		Shape* shape = new Shape();
-		double step = (2 * M_PI) / (double)points;
+    static Shape* Circle(double radius, size_t points, bool onZ = true) {
+        Shape* shape = new Shape();
+        double step = (2 * M_PI) / (double)points;
 
-		for(size_t i = 0; i <= points; i++) {
-			double angle = i * step;
+        for(size_t i = 0; i <= points; i++) {
+            double angle = i * step;
 
-			if(onZ) {
-				Point point = Point(0, 
-									radius * sin(angle),
-									radius * cos(angle));
-				shape->Points().Add(point);
-			}
-			else {
-				Point point = Point(radius * cos(angle), 
-									radius * sin(angle), 
-									0);
-				shape->Points().Add(point);
-			}
-		}
+            if(onZ) {
+                Point point = Point(0, 
+                                    radius * sin(angle),
+                                    radius * cos(angle));
+                shape->Points().Add(point);
+            }
+            else {
+                Point point = Point(radius * cos(angle), 
+                                    radius * sin(angle), 
+                                    0);
+                shape->Points().Add(point);
+            }
+        }
 
-		return shape;
-	}
+        return shape;
+    }
 
-	static Shape* HalfCircle(double radius, size_t points, bool onZ = true) {
-		Shape* shape = new Shape();
-		double step = (2 * M_PI_2) / (double)points;
+    static Shape* HalfCircle(double radius, size_t points, bool onZ = true) {
+        Shape* shape = new Shape();
+        double step = (2 * M_PI_2) / (double)points;
 
-		for(size_t i = 0; i <= points; i++) {
-			double angle = i * step;
+        for(size_t i = 0; i <= points; i++) {
+            double angle = i * step;
 
-			if(onZ) {
-				Point point = Point(0, 
-									radius * sin(angle),
-									radius * cos(angle));
-				shape->Points().Add(point);
-			}
-			else {
-				Point point = Point(radius * cos(angle), 
-									radius * sin(angle), 
-									0);
-				shape->Points().Add(point);
-			}
-		}
+            if(onZ) {
+                Point point = Point(0, 
+                                    radius * sin(angle),
+                                    radius * cos(angle));
+                shape->Points().Add(point);
+            }
+            else {
+                Point point = Point(radius * cos(angle), 
+                                    radius * sin(angle), 
+                                    0);
+                shape->Points().Add(point);
+            }
+        }
 
-		return shape;
-	}
+        return shape;
+    }
 
-	static Shape* Square(double size, size_t points, bool onZ) {
-		Shape* shape = new Shape();
-		points /= 4;
-		double step = size / points;
+    static Shape* Square(double size, size_t points, bool onZ) {
+        Shape* shape = new Shape();
+        points /= 4;
+        double step = size / points;
 
-		for(size_t i = 0; i < points; i++) {
-			shape->Points().Add(Point(-size/2 + i * step, size / 2));
-		}
+        for(size_t i = 0; i < points; i++) {
+            shape->Points().Add(Point(-size/2 + i * step, size / 2));
+        }
 
-		for(size_t i = 0; i < points; i++) {
-			shape->Points().Add(Point(size / 2, size/2- i * step));
-		}
+        for(size_t i = 0; i < points; i++) {
+            shape->Points().Add(Point(size / 2, size/2- i * step));
+        }
 
-		for(size_t i = 0; i < points; i++) {
-			shape->Points().Add(Point(size/2 - i * step, -size/2));
-		}
+        for(size_t i = 0; i < points; i++) {
+            shape->Points().Add(Point(size/2 - i * step, -size/2));
+        }
 
-		for(size_t i = 0; i < points; i++) {
-			shape->Points().Add(Point(-size/2, -size/2 + i*step));
-		}
+        for(size_t i = 0; i < points; i++) {
+            shape->Points().Add(Point(-size/2, -size/2 + i*step));
+        }
 
-		return shape;
-	}
+        return shape;
+    }
 
-	static Shape* Line(double size, size_t points, bool onZ) {
-		Shape* shape = new Shape();
-		double step = size / points;
+    static Shape* Line(double size, size_t points, bool onZ) {
+        Shape* shape = new Shape();
+        double step = size / points;
 
-		for(size_t i = 0; i < points; i++) {
-			shape->Points().Add(Point(-size/2 + i * step, size / 2));
-		}
+        for(size_t i = 0; i < points; i++) {
+            shape->Points().Add(Point(-size/2 + i * step, size / 2));
+        }
 
-		return shape;
-	}
+        return shape;
+    }
 };
 
 #endif

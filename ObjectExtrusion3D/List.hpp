@@ -42,178 +42,177 @@
 template <class T>
 class List : public ISerializable {
 private:
-	static const size_t DEFAULT_CAPACITY;
+    static const size_t DEFAULT_CAPACITY;
 
-	T* array_;
-	size_t count_;
-	size_t capacity_;
-	
+    T* array_;
+    size_t count_;
+    size_t capacity_;
+    
 public:
-	//
-	// Constructors / destructor.
-	//
-	List() : array_(new T[DEFAULT_CAPACITY]), count_(0),
-			 capacity_(DEFAULT_CAPACITY) {}
+    //
+    // Constructors / destructor.
+    //
+    List() : array_(new T[DEFAULT_CAPACITY]), count_(0),
+             capacity_(DEFAULT_CAPACITY) {}
 
-	List(size_t capacity) : array_(new T[capacity]), count_(0),
-							capacity_(capacity) {}
-	
-	List(T* items, size_t count) : array_(new T[count]), count_(count), capacity_(count) {
-		assert(items != null);
-		// --------------------------------
-		memcpy(array_, items, count * sizeof(T));
-	}
-	
-	List(const List &other) : array_(new T[other.count_]),
-							   count_(other.count_), 
-							   capacity_(other.count_) {
-		memcpy(array_, other.array_, count_ * sizeof(T));
-	}
-	
-	~List() {
-		delete[] array_;
-	}
+    List(size_t capacity) : array_(new T[capacity]), count_(0),
+                            capacity_(capacity) {}
+    
+    List(T* items, size_t count) : array_(new T[count]), count_(count), capacity_(count) {
+        assert(items != null);
+        // --------------------------------
+        memcpy(array_, items, count * sizeof(T));
+    }
+    
+    List(const List &other) : array_(new T[other.count_]),
+                              count_(other.count_), 
+                              capacity_(other.count_) {
+        memcpy(array_, other.array_, count_ * sizeof(T));
+    }
+    
+    ~List() {
+        delete[] array_;
+    }
 
-	//
-	// Public methods.
-	//
-	void Add(const T &item) {
-		EnsureSpace(count_ + 1);
-		array_[count_++] = item;
-	}
-	
-	void Add(T* items, int count) {
-		assert(items != NULL);
-		// --------------------------------
-		EnsureSpace(count_ + count);
-		memcpy(&array_[count_], items, count * sizeof(T));
-		count_ += count;
-	}
-	
-	void Add(const List &other) {
-		Add(other.array_, other.count_);
-	}
-	
-	size_t Capacity() const { 
-		return capacity_; 
-	}
-	
-	void Clear() {
-		count_ = 0;
-	}
-	
-	bool Contains(const T &other) const {
-		for(size_t i = 0; i < count_; i++) {
-			if(array_[i] == other) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
-	size_t Count() const { 
-		return count_; 
-	}
-	
-	void Insert(const T &item, size_t index) {
-		assert(index <= count_);
-		// ---------------------------------
-		EnsureSpace(count_ + 1);
-		
-		if(index == count_) {
-			// Inserare la sfarsit.
-			array_[count_++] = item;
-		}
-		else {
-			memmove(&array_[index + 1], &array_[index], (count_ - index) * sizeof(T));
-			array_[index] = item;
-			count_++;
-		}
-	}
-	
-	void Remove(size_t index) {
-		assert(index < count_);
-		// --------------------------------
-		if(index == (count_ - 1)) {
-			count_--;
-		}
-		else {
-			memmove(&array_[index], &array_[index + 1], (count_ - index) * sizeof(T));
-			count_--;
-		}
-	}
-	
-	void Remove(const T &item) {
-		for(size_t i = 0; i < count_; i++) {
-			if(array_[i] == item) {
-				Remove(i);
-				break;
-			}
-		}
-	}
+    //
+    // Public methods.
+    //
+    void Add(const T &item) {
+        EnsureSpace(count_ + 1);
+        array_[count_++] = item;
+    }
+    
+    void Add(T* items, int count) {
+        assert(items != NULL);
+        // --------------------------------
+        EnsureSpace(count_ + count);
+        memcpy(&array_[count_], items, count * sizeof(T));
+        count_ += count;
+    }
+    
+    void Add(const List &other) {
+        Add(other.array_, other.count_);
+    }
+    
+    size_t Capacity() const { 
+        return capacity_; 
+    }
+    
+    void Clear() {
+        count_ = 0;
+    }
+    
+    bool Contains(const T &other) const {
+        for(size_t i = 0; i < count_; i++) {
+            if(array_[i] == other) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    size_t Count() const { 
+        return count_; 
+    }
+    
+    void Insert(const T &item, size_t index) {
+        assert(index <= count_);
+        // ---------------------------------
+        EnsureSpace(count_ + 1);
+        
+        if(index == count_) {
+            // Inserare la sfarsit.
+            array_[count_++] = item;
+        }
+        else {
+            memmove(&array_[index + 1], &array_[index], (count_ - index) * sizeof(T));
+            array_[index] = item;
+            count_++;
+        }
+    }
+    
+    void Remove(size_t index) {
+        assert(index < count_);
+        // --------------------------------
+        if(index == (count_ - 1)) {
+            count_--;
+        }
+        else {
+            memmove(&array_[index], &array_[index + 1], (count_ - index) * sizeof(T));
+            count_--;
+        }
+    }
+    
+    void Remove(const T &item) {
+        for(size_t i = 0; i < count_; i++) {
+            if(array_[i] == item) {
+                Remove(i);
+                break;
+            }
+        }
+    }
 
-	//
-	// Serialization.
-	//
-	virtual void Serialize(Stream &stream) const {
-		// First write the number of elements, then each element in turn.
-		stream.Write(count_);
+    //
+    // Serialization.
+    //
+    virtual void Serialize(Stream &stream) const {
+        // First write the number of elements, then each element in turn.
+        stream.Write(count_);
 
-		for(size_t i = 0; i < count_; i++) {
-			stream.Write(array_[i]);
-		}
-	}
+        for(size_t i = 0; i < count_; i++) {
+            stream.Write(array_[i]);
+        }
+    }
 
-	virtual void Deserialize(Stream &stream) {
-		delete[] array_;
-		stream.Read(count_);
-		
-		if(count_ == 0) {
-			array_ = new T[DEFAULT_CAPACITY];
-			capacity_ = DEFAULT_CAPACITY;
-		}
-		else {
-			array_ = new T[count_];
-			capacity_ = count_;
+    virtual void Deserialize(Stream &stream) {
+        delete[] array_;
+        stream.Read(count_);
+        
+        if(count_ == 0) {
+            array_ = new T[DEFAULT_CAPACITY];
+            capacity_ = DEFAULT_CAPACITY;
+        }
+        else {
+            array_ = new T[count_];
+            capacity_ = count_;
 
-			for(size_t i = 0; i < count_; i++) {
-				stream.Read(array_[i]);
-			}
-		}
-	}
-	
-	T &operator [](size_t index) const {
-		assert(index < count_);
-		// --------------------------------
-		return array_[index];
-	}
-	
-	List operator =(const List &other) {
-		if(&other == this) {
-			return *this;
-		}
-		
-		T* newArray = new T[other.count_];
-		std::copy(other.array_, other.array_ + other.count_, other.count_);
-		
-		count_ = other.count_;
-		capacity_ = other.count_;
-		delete[] array_;
-		array_ = newArray_;
-		return *this;
-	}
-	
+            for(size_t i = 0; i < count_; i++) {
+                stream.Read(array_[i]);
+            }
+        }
+    }
+    
+    T &operator [](size_t index) const {
+        assert(index < count_);
+        // --------------------------------
+        return array_[index];
+    }
+    
+    List operator =(const List &other) {
+        if(&other == this) {
+            return *this;
+        }
+        
+        T* newArray = new T[other.count_];
+        std::copy(other.array_, other.array_ + other.count_, other.count_);
+        
+        count_ = other.count_;
+        capacity_ = other.count_;
+        delete[] array_;
+        array_ = newArray_;
+        return *this;
+    }
+    
 private:
-	void EnsureSpace(size_t newCount) {
-		if(newCount > capacity_) {
-			T* oldArray = array_;
-			array_ = new T[capacity_ * 2];
-			
-			memcpy(array_, oldArray, count_ * sizeof(T));
-			capacity_ *= 2;
-		}
-	}
+    void EnsureSpace(size_t newCount) {
+        if(newCount > capacity_) {
+            T* oldArray = array_;
+            array_ = new T[capacity_ * 2];
+            memcpy(array_, oldArray, count_ * sizeof(T));
+            capacity_ *= 2;
+        }
+    }
 };
 
 template<class T>

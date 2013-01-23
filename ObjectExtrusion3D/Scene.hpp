@@ -41,110 +41,110 @@
 #include <cstdlib>
 
 enum SceneState {
-	SCENE_EDIT,
-	SCENE_PLAY,
-	SCENE_END
+    SCENE_EDIT,
+    SCENE_PLAY,
+    SCENE_END
 };
 
 class Scene : public ISerializable {
 private:
-	Shape *shape_;
-	Storyboard storyBoard_;
-	SceneState state_;
+    Shape *shape_;
+    Storyboard storyBoard_;
+    SceneState state_;
 
 public:
-	//
-	// Constructors / destructor.
-	//
-	Scene() : shape_(NULL), state_(SCENE_EDIT) {}
+    //
+    // Constructors / destructor.
+    //
+    Scene() : shape_(NULL), state_(SCENE_EDIT) {}
 
-	~Scene() {
-		if(shape_ != NULL) {
-			delete shape_;
-		}
-	}
+    ~Scene() {
+        if(shape_ != NULL) {
+            delete shape_;
+        }
+    }
 
-	//
-	// Public methods.
-	//
-	Shape* ShapeObject() {
-		return shape_;
-	}
+    //
+    // Public methods.
+    //
+    Shape* ShapeObject() {
+        return shape_;
+    }
 
-	void SetShape(Shape *shape) {
-		if(shape_ != NULL) {
-			delete shape_;
-		}
+    void SetShape(Shape *shape) {
+        if(shape_ != NULL) {
+            delete shape_;
+        }
 
-		shape_ = shape;
-		storyBoard_.SetShapeObject(shape);
-	}
+        shape_ = shape;
+        storyBoard_.SetShapeObject(shape);
+    }
 
-	Storyboard& Storyboard() {
-		return storyBoard_;
-	}
+    Storyboard& Storyboard() {
+        return storyBoard_;
+    }
 
-	SceneState State() { 
-		return state_;
-	}
+    SceneState State() { 
+        return state_;
+    }
 
-	void SetState(SceneState state) {
-		state_ = state;
-	}
+    void SetState(SceneState state) {
+        state_ = state;
+    }
 
-	bool Open(wchar_t *path) {
-		Stream stream(path, false);
-		
-		if(!stream.IsValid()) {
-			return false;
-		}
+    bool Open(wchar_t *path) {
+        Stream stream(path, false);
+        
+        if(!stream.IsValid()) {
+            return false;
+        }
 
-		Deserialize(stream);
-		return true;
-	}
+        Deserialize(stream);
+        return true;
+    }
 
-	bool Save(wchar_t *path) {
-		Sream stream(path, true);
-		
-		if(!stream.IsValid()) {
-			return false;
-		}
+    bool Save(wchar_t *path) {
+        Sream stream(path, true);
+        
+        if(!stream.IsValid()) {
+            return false;
+        }
 
-		Serialize(stream);
-		return true;
-	}
+        Serialize(stream);
+        return true;
+    }
 
-	//
-	// Serialization.
-	//
-	virtual void Serialize(Stream &stream) const {
-		stream.Write((int)shape_->Type());
-		stream.Write(*shape_);
-		stream.Write(storyBoard_);
-	}
+    //
+    // Serialization.
+    //
+    virtual void Serialize(Stream &stream) const {
+        stream.Write((int)shape_->Type());
+        stream.Write(*shape_);
+        stream.Write(storyBoard_);
+    }
 
-	virtual void Deserialize(Stream &stream) {
-		// Citeste figura.
-		int temp;
-		stream.Read(temp);
-		ShapeType shapeType = (ShapeType)temp;
+    virtual void Deserialize(Stream &stream) {
+        // Citeste figura.
+        int temp;
+        stream.Read(temp);
+        ShapeType shapeType = (ShapeType)temp;
 
-		switch(shapeType) {
-			case SHAPE_BASIC: {
-				shape_ = new Shape();
-				stream.Read(*shape_);
-				break;
-			}
-			case SHAPE_BEZIER: {
-				shape_ = new BezierShape();
-				stream.Read(*(BezierShape *)shape_);
-				break;
-			}
-		}
+        switch(shapeType) {
+            case SHAPE_BASIC: {
+                shape_ = new Shape();
+                stream.Read(*shape_);
+                break;
+            }
+            case SHAPE_BEZIER: {
+                shape_ = new BezierShape();
+                stream.Read(*(BezierShape *)shape_);
+                break;
+            }
+        }
 
-		stream.Read(storyBoard_);
-		storyBoard_.SetShapeObject(shape_);
-	}
+        stream.Read(storyBoard_);
+        storyBoard_.SetShapeObject(shape_);
+    }
 };
 
 #endif
