@@ -105,7 +105,9 @@ public:
 	
 	bool Contains(const T &other) const {
 		for(size_t i = 0; i < count_; i++) {
-			if(array_[i] == other) return true;
+			if(array_[i] == other) {
+				return true;
+			}
 		}
 		
 		return false;
@@ -166,8 +168,8 @@ public:
 
 	virtual void Deserialize(Stream &stream) {
 		delete[] array_;
-
 		stream.Read(count_);
+		
 		if(count_ == 0) {
 			array_ = new T[DEFAULT_CAPACITY];
 			capacity_ = DEFAULT_CAPACITY;
@@ -189,7 +191,9 @@ public:
 	}
 	
 	List operator =(const List &other) {
-		if(&other == this) return *this;
+		if(&other == this) {
+			return *this;
+		}
 		
 		T* newArray = new T[other.count_];
 		std::copy(other.array_, other.array_ + other.count_, other.count_);
