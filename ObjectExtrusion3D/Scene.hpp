@@ -95,7 +95,7 @@ public:
 	bool Open(wchar_t *path) {
 		Stream stream(path, false);
 		
-		if(stream.IsValid() == false) {
+		if(!stream.IsValid()) {
 			return false;
 		}
 
@@ -106,7 +106,7 @@ public:
 	bool Save(wchar_t *path) {
 		Sream stream(path, true);
 		
-		if(stream.IsValid() == false) {
+		if(!stream.IsValid()) {
 			return false;
 		}
 
