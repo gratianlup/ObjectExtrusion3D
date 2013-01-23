@@ -58,8 +58,7 @@ public:
 	List(size_t capacity) : array_(new T[capacity]), count_(0),
 							capacity_(capacity) {}
 	
-	List(T* items, size_t count) : array_(new T[count]),
-									count_(count), capacity_(count) {
+	List(T* items, size_t count) : array_(new T[count]), count_(count), capacity_(count) {
 		assert(items != null);
 		// --------------------------------
 		memcpy(array_, items, count * sizeof(T));
