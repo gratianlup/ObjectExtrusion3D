@@ -13,7 +13,7 @@ The following two videos demonstrate how the objects are drawn:
 **[View glass model demonstration video](http://youtu.be/X7BrC3BPPSU)**  
 **[View "musical instrument" model demonstration video](http://youtu.be/Ndq8IkrdHyU)**  
 
-**Screenshots:**  
+### Screenshots:  
 
 ![SmartFlip screenshot](http://www.gratianlup.com/documents/object_extrusion_3d_2.PNG)  
 ![SmartFlip screenshot](http://www.gratianlup.com/documents/object_extrusion_3d_1.PNG)  
